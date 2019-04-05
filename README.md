@@ -1,3 +1,48 @@
+# Hack, to run locally on laptop
+
+```
+
+aws s3 cp ~/data/tiny.json s3://yaroslavvb2/data/tiny.json
+mkdir ~/data
+wget --no-check-certificate https://s3.amazonaws.com/yaroslavvb2/data/tiny.json -O ~/data/tiny.json
+
+python pretrain_bert.py \
+    --batch-size 1 \
+    --tokenizer-type BertWordPieceTokenizer \
+    --cache-dir temp_cache_dir \
+    --tokenizer-model-type bert-large-uncased \
+    --vocab-size 30522 \
+    --train-data ~/data/tiny.json \
+    --test-data ~/data/tiny.json \
+    --valid-data ~/data/tiny.json \
+    --loose-json \
+    --text-key text \
+    --split 1000,1,1 \
+    --lazy-loader \
+    --max-preds-per-seq 80 \
+    --seq-length 32 \
+    --max-position-embeddings 512 \
+    --num-layers 6 \
+    --hidden-size 32 \
+    --intermediate-size 32 \
+    --num-attention-heads 4 \
+    --hidden-dropout 0.1 \
+    --attention-dropout 0.1 \
+    --train-iters 3 \
+    --lr 0.00000001 \
+    --lr-decay-style linear \
+    --lr-decay-iters 990000 \
+    --warmup .01 \
+    --weight-decay 1e-2 \
+    --clip-grad 1.0 \
+    --fp32-layernorm \
+    --fp32-embedding \
+    --hysteresis 2 \
+    --num-workers 2 
+```
+
+# Original
+
 Megatron is a large, powerful transformer. This repo is for ongoing research on training large, powerful transformer language models at scale. Currently, we support multinode training of [BERT](https://arxiv.org/pdf/1810.04805.pdf) in mixed precision. Our codebase is capable of training BERT Large on 64 V100 GPUs in 3 days. We achieved a final language modeling perplexity of 3.15 and SQuAD F1-score of 90.7.
 
 # Setup
